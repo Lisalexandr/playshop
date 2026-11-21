@@ -20,8 +20,18 @@ export default function Orders() {
       .catch((e) => setError(e.message));
   }, []);
 
-  if (error) return <p className="alert alert-error" role="alert">{error}</p>;
-  if (!orders) return <div className="spinner" role="progressbar" aria-label="Loading orders">Loading orders…</div>;
+  if (error)
+    return (
+      <p className="alert alert-error" role="alert">
+        {error}
+      </p>
+    );
+  if (!orders)
+    return (
+      <div className="spinner" role="progressbar" aria-label="Loading orders">
+        Loading orders…
+      </div>
+    );
 
   if (orders.length === 0) {
     return (

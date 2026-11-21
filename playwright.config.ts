@@ -22,9 +22,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     testIdAttribute: 'data-testid',
   },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-  ],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   // Starts the API + frontend automatically (or reuses them if already running).
   webServer: {
     command: 'npm run dev',

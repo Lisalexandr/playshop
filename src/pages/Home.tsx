@@ -57,7 +57,9 @@ export default function Home() {
             <Link key={c.id} to={`/products?category=${c.id}`} className="category-tile" data-testid="category-tile">
               <span className="category-emoji">{c.emoji}</span>
               <span>{c.name}</span>
-              <small className="muted">{c.productCount} {c.productCount === 1 ? 'product' : 'products'}</small>
+              <small className="muted">
+                {c.productCount} {c.productCount === 1 ? 'product' : 'products'}
+              </small>
             </Link>
           ))}
         </div>
@@ -66,7 +68,9 @@ export default function Home() {
       <section aria-labelledby="featured-heading">
         <h2 id="featured-heading">Featured products</h2>
         <div className="product-grid">
-          {featured?.items.map((p) => <ProductCard key={p.id} product={p} />)}
+          {featured?.items.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
       </section>
     </>

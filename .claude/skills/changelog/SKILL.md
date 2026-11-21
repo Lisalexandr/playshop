@@ -31,19 +31,19 @@ Make Git commits that follow the [Conventional Commits 1.0.0](https://www.conven
 
 Conventional Commits defines only `feat` and `fix`. The other types come from the Angular convention ([`@commitlint/config-conventional`](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional)). If the repository has its own list, use that list.
 
-| Type       | Use it for                                     |
-| ---------- | ---------------------------------------------- |
-| `feat`     | A new feature                                  |
-| `fix`      | A bug fix                                      |
-| `docs`     | Documentation only                             |
-| `style`    | Formatting only, with no change to the logic   |
-| `refactor` | A code change that is not a feature or a fix   |
-| `perf`     | A performance improvement                      |
-| `test`     | New or changed tests                           |
-| `build`    | The build system or the dependencies           |
-| `ci`       | The CI configuration                           |
-| `chore`    | Other maintenance                              |
-| `revert`   | A revert of an earlier commit                  |
+| Type       | Use it for                                   |
+| ---------- | -------------------------------------------- |
+| `feat`     | A new feature                                |
+| `fix`      | A bug fix                                    |
+| `docs`     | Documentation only                           |
+| `style`    | Formatting only, with no change to the logic |
+| `refactor` | A code change that is not a feature or a fix |
+| `perf`     | A performance improvement                    |
+| `test`     | New or changed tests                         |
+| `build`    | The build system or the dependencies         |
+| `ci`       | The CI configuration                         |
+| `chore`    | Other maintenance                            |
+| `revert`   | A revert of an earlier commit                |
 
 ## Breaking Changes
 
@@ -59,15 +59,15 @@ BREAKING CHANGE: Clients must use the v2 endpoints.
 
 Pick the scope from the area the diff touches. Leave the scope out if the change spans many areas.
 
-| Scope      | Area                                                   |
-| ---------- | ------------------------------------------------------ |
-| `e2e`      | Playwright specs, fixtures and page objects in `tests/` |
-| `pw`       | `playwright.config.ts` and test tooling                |
-| `api`      | The Express server in `server/`                        |
-| `ui`       | Shared components in `src/components/`                 |
-| `pages`    | Route pages in `src/pages/`                            |
-| `auth`, `cart`, `checkout`, `orders`, `admin` | A feature across UI, API and tests |
-| `deps`     | `package.json` and `package-lock.json`                 |
+| Scope                                         | Area                                                    |
+| --------------------------------------------- | ------------------------------------------------------- |
+| `e2e`                                         | Playwright specs, fixtures and page objects in `tests/` |
+| `pw`                                          | `playwright.config.ts` and test tooling                 |
+| `api`                                         | The Express server in `server/`                         |
+| `ui`                                          | Shared components in `src/components/`                  |
+| `pages`                                       | Route pages in `src/pages/`                             |
+| `auth`, `cart`, `checkout`, `orders`, `admin` | A feature across UI, API and tests                      |
+| `deps`                                        | `package.json` and `package-lock.json`                  |
 
 New or changed Playwright tests use the `test` type, for example `test(e2e): cover checkout with an empty cart`.
 

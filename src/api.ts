@@ -127,5 +127,4 @@ export async function api<T>(path: string, { method = 'GET', body }: Options = {
   return data as T;
 }
 
-export const money = (n: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+export const money = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);

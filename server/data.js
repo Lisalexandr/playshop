@@ -22,8 +22,7 @@ const products = [
     emoji: '🎧',
     color: '#dbeafe',
     featured: true,
-    description:
-      'Over-ear wireless headphones with active noise cancelling, 30-hour battery life and fast USB-C charging.',
+    description: 'Over-ear wireless headphones with active noise cancelling, 30-hour battery life and fast USB-C charging.',
     features: ['Active noise cancelling', '30h battery', 'Bluetooth 5.3', 'Foldable design'],
     reviews: [
       { author: 'Maya', rating: 5, text: 'Amazing sound and super comfortable.' },
@@ -105,7 +104,7 @@ const products = [
   },
   {
     id: 7,
-    name: "Forge Chef's Knife 8\"",
+    name: 'Forge Chef\'s Knife 8"',
     category: 'home',
     price: 59.95,
     stock: 20,

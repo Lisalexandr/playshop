@@ -149,9 +149,7 @@ function resolveLines(items) {
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 app.get('/api/categories', (_req, res) => {
-  res.json(
-    db.categories.map((c) => ({ ...c, productCount: db.products.filter((p) => p.category === c.id).length })),
-  );
+  res.json(db.categories.map((c) => ({ ...c, productCount: db.products.filter((p) => p.category === c.id).length })));
 });
 
 app.get('/api/products', (req, res) => {
@@ -343,9 +341,7 @@ app.post('/api/orders', requireAuth, (req, res) => {
 });
 
 app.get('/api/orders', requireAuth, (req, res) => {
-  const orders = db.orders
-    .filter((o) => o.userId === req.user.id)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const orders = db.orders.filter((o) => o.userId === req.user.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   res.json(orders);
 });
 
