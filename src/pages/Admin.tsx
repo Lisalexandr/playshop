@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, money, type Order, type ProductPage, type Product, type User } from '../api';
-import { useToast } from '../context/ToastContext';
+import { useToast } from '../context/useToast';
 import { StatusBadge } from './Orders';
 
 type Tab = 'orders' | 'inventory' | 'users';
@@ -14,17 +14,18 @@ export default function Admin() {
   const [users, setUsers] = useState<User[]>([]);
   const [stockDrafts, setStockDrafts] = useState<Record<number, string>>({});
 
-  const load = useCallback(async () => {
-    const [o, p, u] = await Promise.all([
-      api<Order[]>('/admin/orders'),
-      api<ProductPage>('/products?sort=name'),
-      api<User[]>('/admin/users'),
-    ]);
-    setOrders(o);
-    setProducts(p.items);
-    setUsers(u);
-    setStockDrafts(Object.fromEntries(p.items.map((x) => [x.id, String(x.stock)])));
-  }, []);
+  const load = useCallback(
+    () =>
+      Promise.all([api<Order[]>('/admin/orders'), api<ProductPage>('/products?sort=name'), api<User[]>('/admin/users')]).then(
+        ([o, p, u]) => {
+          setOrders(o);
+          setProducts(p.items);
+          setUsers(u);
+          setStockDrafts(Object.fromEntries(p.items.map((x) => [x.id, String(x.stock)])));
+        },
+      ),
+    [],
+  );
 
   useEffect(() => {
     load();
@@ -143,11 +144,7 @@ export default function Admin() {
                       />
                     </td>
                     <td>
-                      <button
-                        className="btn btn-secondary"
-                        disabled={stockDrafts[p.id] === String(p.stock)}
-                        onClick={() => saveStock(p)}
-                      >
+                      <button className="btn btn-secondary" disabled={stockDrafts[p.id] === String(p.stock)} onClick={() => saveStock(p)}>
                         Save
                       </button>
                     </td>

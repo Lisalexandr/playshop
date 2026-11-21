@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { ApiError } from '../api';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useToast } from '../context/useToast';
 
 type Fields = 'name' | 'email' | 'password' | 'confirm' | 'terms';
 

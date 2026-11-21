@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { ApiError } from '../api';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useToast } from '../context/useToast';
 
 export default function Login() {
   const { user, login } = useAuth();
@@ -70,7 +70,8 @@ export default function Login() {
         </button>
       </form>
       <p>
-        New to PlayShop? <Link to={`/register${params.get('redirect') ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}>Create an account</Link>
+        New to PlayShop?{' '}
+        <Link to={`/register${params.get('redirect') ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}>Create an account</Link>
       </p>
 
       <details className="demo-accounts">
@@ -84,11 +85,31 @@ export default function Login() {
             </tr>
           </thead>
           <tbody>
-            <tr><td>alice@example.com</td><td>Password123!</td><td>Customer with an order history</td></tr>
-            <tr><td>bob@example.com</td><td>Password123!</td><td>Customer, no orders</td></tr>
-            <tr><td>locked@example.com</td><td>Password123!</td><td>Locked – login fails</td></tr>
-            <tr><td>slow@example.com</td><td>Password123!</td><td>Every request takes ~2.5s</td></tr>
-            <tr><td>admin@example.com</td><td>Admin123!</td><td>Admin panel access</td></tr>
+            <tr>
+              <td>alice@example.com</td>
+              <td>Password123!</td>
+              <td>Customer with an order history</td>
+            </tr>
+            <tr>
+              <td>bob@example.com</td>
+              <td>Password123!</td>
+              <td>Customer, no orders</td>
+            </tr>
+            <tr>
+              <td>locked@example.com</td>
+              <td>Password123!</td>
+              <td>Locked – login fails</td>
+            </tr>
+            <tr>
+              <td>slow@example.com</td>
+              <td>Password123!</td>
+              <td>Every request takes ~2.5s</td>
+            </tr>
+            <tr>
+              <td>admin@example.com</td>
+              <td>Admin123!</td>
+              <td>Admin panel access</td>
+            </tr>
           </tbody>
         </table>
       </details>

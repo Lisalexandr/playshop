@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api, money, type Quote } from '../api';
 import OrderSummary from '../components/OrderSummary';
 import { ProductImage } from '../components/ProductCard';
-import { MAX_QTY, useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { MAX_QTY, useCart } from '../context/useCart';
+import { useToast } from '../context/useToast';
 
 export default function Cart() {
   const { items, updateQty, remove, clear, promoCode, setPromoCode, count } = useCart();
@@ -18,12 +18,16 @@ export default function Cart() {
 
   const cartPayload = items.map((i) => ({ productId: i.productId, qty: i.qty, option: i.option }));
 
+  const quoteKey = JSON.stringify([cartPayload, promoCode]);
+  const [prevQuoteKey, setPrevQuoteKey] = useState<string | null>(null);
+  if (quoteKey !== prevQuoteKey) {
+    setPrevQuoteKey(quoteKey);
+    if (items.length === 0) setQuote(null);
+    else setQuoteLoading(true);
+  }
+
   useEffect(() => {
-    if (items.length === 0) {
-      setQuote(null);
-      return;
-    }
-    setQuoteLoading(true);
+    if (items.length === 0) return;
     api<Quote>('/cart/quote', { method: 'POST', body: { items: cartPayload, promoCode } })
       .then((q) => {
         setQuote(q);
@@ -36,7 +40,7 @@ export default function Cart() {
       .catch(() => setQuote(null))
       .finally(() => setQuoteLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(cartPayload), promoCode]);
+  }, [quoteKey]);
 
   const applyPromo = async (e: FormEvent) => {
     e.preventDefault();
@@ -88,7 +92,9 @@ export default function Cart() {
     <div className="cart-page">
       <section>
         <div className="row-between">
-          <h1>Shopping cart ({count} {count === 1 ? 'item' : 'items'})</h1>
+          <h1>
+            Shopping cart ({count} {count === 1 ? 'item' : 'items'})
+          </h1>
           <button className="btn btn-ghost" onClick={onClear}>
             Clear cart
           </button>

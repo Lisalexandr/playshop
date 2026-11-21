@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { api, ApiError, type User } from '../api';
-import { useAuth } from '../context/AuthContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useToast } from '../context/useToast';
 
 export default function Account() {
   const { user, setUser } = useAuth();
@@ -52,7 +52,8 @@ export default function Account() {
           name: form.name,
           phone: form.phone,
           avatar,
-          address: form.line1 || form.city || form.zip ? { line1: form.line1, city: form.city, zip: form.zip, country: form.country } : null,
+          address:
+            form.line1 || form.city || form.zip ? { line1: form.line1, city: form.city, zip: form.zip, country: form.country } : null,
         },
       });
       setUser(updated);
@@ -119,7 +120,11 @@ export default function Account() {
             Upload picture
           </label>
           <input id="avatar-upload" type="file" accept="image/*" className="sr-only" onChange={onAvatar} />
-          {avatarName && <p className="muted small" data-testid="avatar-filename">{avatarName}</p>}
+          {avatarName && (
+            <p className="muted small" data-testid="avatar-filename">
+              {avatarName}
+            </p>
+          )}
           {avatarError && (
             <p className="error-text" role="alert">
               {avatarError}
