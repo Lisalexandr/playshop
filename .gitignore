@@ -6,4 +6,3 @@ blob-report
 playwright/.auth
 .env
 .DS_Store
-.husky

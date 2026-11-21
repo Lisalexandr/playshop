@@ -1,0 +1,24 @@
+npx lint-staged
+
+if ! command -v claude >/dev/null 2>&1; then
+  echo "security-review: claude CLI not found, skipping"
+  exit 0
+fi
+
+diff=$(git diff --cached --no-color -- . ':(exclude)package-lock.json')
+[ -z "$diff" ] && exit 0
+
+echo "security-review: reviewing staged changes with the security-reviewer agent..."
+if ! out=$(printf 'Review this staged diff (git diff --cached):\n\n%s\n' "$diff" |
+  env -u CLAUDECODE claude -p --agent security-reviewer --no-session-persistence 2>&1); then
+  printf '%s\n' "$out"
+  echo "security-review: review failed to run. Commit blocked (use --no-verify to bypass)."
+  exit 1
+fi
+
+printf '%s\n' "$out"
+verdict=$(printf '%s\n' "$out" | grep -E '^VERDICT: (PASS|FAIL)$' | tail -n 1)
+if [ "$verdict" != "VERDICT: PASS" ]; then
+  echo "security-review: ${verdict:-no verdict returned}. Commit blocked (use --no-verify to bypass)."
+  exit 1
+fi
