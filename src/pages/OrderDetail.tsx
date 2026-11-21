@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { api, ApiError, money, type Order } from '../api';
 import OrderSummary from '../components/OrderSummary';
-import { useToast } from '../context/ToastContext';
+import { useToast } from '../context/useToast';
 import { StatusBadge } from './Orders';
 
 function downloadInvoice(order: Order) {
@@ -77,7 +77,12 @@ export default function OrderDetail() {
       </section>
     );
   }
-  if (!order) return <div className="spinner" role="progressbar" aria-label="Loading order">Loading…</div>;
+  if (!order)
+    return (
+      <div className="spinner" role="progressbar" aria-label="Loading order">
+        Loading…
+      </div>
+    );
 
   return (
     <section className="order-detail" data-testid="order-detail">
@@ -85,8 +90,8 @@ export default function OrderDetail() {
         <div className="confirmation" role="status" data-testid="order-confirmation">
           <h1>🎉 Thank you for your order!</h1>
           <p>
-            Your order number is <strong data-testid="order-number">{order.id}</strong>. A confirmation email is on its way
-            (not really – this is a sandbox).
+            Your order number is <strong data-testid="order-number">{order.id}</strong>. A confirmation email is on its way (not really –
+            this is a sandbox).
           </p>
         </div>
       )}

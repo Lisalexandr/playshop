@@ -25,22 +25,33 @@ export default function Products() {
     api<Category[]>('/categories').then(setCategories);
   }, []);
 
-  useEffect(() => setPriceDraft({ min: minPrice, max: maxPrice }), [minPrice, maxPrice]);
+  const [prevPrice, setPrevPrice] = useState({ min: minPrice, max: maxPrice });
+  if (minPrice !== prevPrice.min || maxPrice !== prevPrice.max) {
+    setPrevPrice({ min: minPrice, max: maxPrice });
+    setPriceDraft({ min: minPrice, max: maxPrice });
+  }
 
-  useEffect(() => {
-    const query = new URLSearchParams({ sort, page: String(page), limit: String(PAGE_SIZE) });
-    if (category) query.set('category', category);
-    if (q) query.set('q', q);
-    if (inStock) query.set('inStock', 'true');
-    if (minPrice) query.set('minPrice', minPrice);
-    if (maxPrice) query.set('maxPrice', maxPrice);
+  const query = new URLSearchParams({ sort, page: String(page), limit: String(PAGE_SIZE) });
+  if (category) query.set('category', category);
+  if (q) query.set('q', q);
+  if (inStock) query.set('inStock', 'true');
+  if (minPrice) query.set('minPrice', minPrice);
+  if (maxPrice) query.set('maxPrice', maxPrice);
+  const queryString = query.toString();
+
+  const [prevQueryString, setPrevQueryString] = useState(queryString);
+  if (queryString !== prevQueryString) {
+    setPrevQueryString(queryString);
     setLoading(true);
     setError(null);
-    api<ProductPage>(`/products?${query}`)
+  }
+
+  useEffect(() => {
+    api<ProductPage>(`/products?${queryString}`)
       .then(setData)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-  }, [category, q, sort, page, inStock, minPrice, maxPrice]);
+  }, [queryString]);
 
   const update = (changes: Record<string, string | null>) => {
     const next = new URLSearchParams(params);
@@ -53,7 +64,7 @@ export default function Products() {
   };
 
   const categoryName = categories.find((c) => c.id === category)?.name;
-  const title = q ? `Results for “${q}”` : categoryName ?? 'All products';
+  const title = q ? `Results for “${q}”` : (categoryName ?? 'All products');
 
   return (
     <div className="catalog">
@@ -66,13 +77,7 @@ export default function Products() {
           </label>
           {categories.map((c) => (
             <label key={c.id}>
-              <input
-                type="radio"
-                name="category"
-                value={c.id}
-                checked={category === c.id}
-                onChange={() => update({ category: c.id })}
-              />
+              <input type="radio" name="category" value={c.id} checked={category === c.id} onChange={() => update({ category: c.id })} />
               {c.name} <span className="muted">({c.productCount})</span>
             </label>
           ))}
@@ -113,20 +118,12 @@ export default function Products() {
         <fieldset>
           <legend>Availability</legend>
           <label>
-            <input
-              type="checkbox"
-              checked={inStock}
-              onChange={(e) => update({ inStock: e.target.checked ? 'true' : null })}
-            />
+            <input type="checkbox" checked={inStock} onChange={(e) => update({ inStock: e.target.checked ? 'true' : null })} />
             In stock only
           </label>
         </fieldset>
 
-        <button
-          className="btn btn-ghost"
-          onClick={() => setParams(new URLSearchParams())}
-          disabled={params.toString() === ''}
-        >
+        <button className="btn btn-ghost" onClick={() => setParams(new URLSearchParams())} disabled={params.toString() === ''}>
           Clear all filters
         </button>
       </aside>
@@ -170,7 +167,9 @@ export default function Products() {
           </div>
         ) : (
           <div className="product-grid" aria-busy={loading}>
-            {data?.items.map((p) => <ProductCard key={p.id} product={p} />)}
+            {data?.items.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
           </div>
         )}
 

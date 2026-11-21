@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, NavLink, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { api, type Category } from '../api';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useCart } from '../context/useCart';
+import { useToast } from '../context/useToast';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -18,11 +18,22 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    api<Category[]>('/categories').then(setCategories).catch(() => {});
+    api<Category[]>('/categories')
+      .then(setCategories)
+      .catch(() => {});
   }, []);
 
-  useEffect(() => setMenuOpen(false), [location]);
-  useEffect(() => setQuery(params.get('q') ?? ''), [params]);
+  const [prevLocation, setPrevLocation] = useState(location);
+  if (location !== prevLocation) {
+    setPrevLocation(location);
+    setMenuOpen(false);
+  }
+
+  const [prevParams, setPrevParams] = useState(params);
+  if (params !== prevParams) {
+    setPrevParams(params);
+    setQuery(params.get('q') ?? '');
+  }
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {

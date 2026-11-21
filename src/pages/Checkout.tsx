@@ -2,9 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { api, ApiError, money, type Order, type Quote } from '../api';
 import OrderSummary from '../components/OrderSummary';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/useAuth';
+import { useCart } from '../context/useCart';
+import { useToast } from '../context/useToast';
 
 type Step = 'shipping' | 'payment' | 'review';
 type Errors = Record<string, string>;
@@ -161,23 +161,40 @@ export default function Checkout() {
               <h2>Shipping address</h2>
               <div className="field">
                 <label htmlFor="fullName">Full name</label>
-                <input {...inputProps('shipping', 'fullName')} autoComplete="name" onChange={(e) => setShipping({ ...shipping, fullName: e.target.value })} />
+                <input
+                  {...inputProps('shipping', 'fullName')}
+                  autoComplete="name"
+                  onChange={(e) => setShipping({ ...shipping, fullName: e.target.value })}
+                />
                 <FieldError id="fullName" error={errors.fullName} />
               </div>
               <div className="field">
                 <label htmlFor="line1">Street address</label>
-                <input {...inputProps('shipping', 'line1')} autoComplete="address-line1" onChange={(e) => setShipping({ ...shipping, line1: e.target.value })} />
+                <input
+                  {...inputProps('shipping', 'line1')}
+                  autoComplete="address-line1"
+                  onChange={(e) => setShipping({ ...shipping, line1: e.target.value })}
+                />
                 <FieldError id="line1" error={errors.line1} />
               </div>
               <div className="field-row">
                 <div className="field">
                   <label htmlFor="city">City</label>
-                  <input {...inputProps('shipping', 'city')} autoComplete="address-level2" onChange={(e) => setShipping({ ...shipping, city: e.target.value })} />
+                  <input
+                    {...inputProps('shipping', 'city')}
+                    autoComplete="address-level2"
+                    onChange={(e) => setShipping({ ...shipping, city: e.target.value })}
+                  />
                   <FieldError id="city" error={errors.city} />
                 </div>
                 <div className="field">
                   <label htmlFor="zip">ZIP code</label>
-                  <input {...inputProps('shipping', 'zip')} inputMode="numeric" autoComplete="postal-code" onChange={(e) => setShipping({ ...shipping, zip: e.target.value })} />
+                  <input
+                    {...inputProps('shipping', 'zip')}
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    onChange={(e) => setShipping({ ...shipping, zip: e.target.value })}
+                  />
                   <FieldError id="zip" error={errors.zip} />
                 </div>
               </div>
@@ -194,7 +211,12 @@ export default function Checkout() {
                 </div>
                 <div className="field">
                   <label htmlFor="phone">Phone (optional)</label>
-                  <input {...inputProps('shipping', 'phone')} type="tel" autoComplete="tel" onChange={(e) => setShipping({ ...shipping, phone: e.target.value })} />
+                  <input
+                    {...inputProps('shipping', 'phone')}
+                    type="tel"
+                    autoComplete="tel"
+                    onChange={(e) => setShipping({ ...shipping, phone: e.target.value })}
+                  />
                   <FieldError id="phone" error={errors.phone} />
                 </div>
               </div>
@@ -202,7 +224,13 @@ export default function Checkout() {
               <fieldset className="shipping-methods">
                 <legend>Delivery method</legend>
                 <label className={`radio-card ${shippingMethod === 'standard' ? 'selected' : ''}`}>
-                  <input type="radio" name="shippingMethod" value="standard" checked={shippingMethod === 'standard'} onChange={() => setShippingMethod('standard')} />
+                  <input
+                    type="radio"
+                    name="shippingMethod"
+                    value="standard"
+                    checked={shippingMethod === 'standard'}
+                    onChange={() => setShippingMethod('standard')}
+                  />
                   <span>
                     <strong>Standard</strong> – 5–7 business days
                     <br />
@@ -210,7 +238,13 @@ export default function Checkout() {
                   </span>
                 </label>
                 <label className={`radio-card ${shippingMethod === 'express' ? 'selected' : ''}`}>
-                  <input type="radio" name="shippingMethod" value="express" checked={shippingMethod === 'express'} onChange={() => setShippingMethod('express')} />
+                  <input
+                    type="radio"
+                    name="shippingMethod"
+                    value="express"
+                    checked={shippingMethod === 'express'}
+                    onChange={() => setShippingMethod('express')}
+                  />
                   <span>
                     <strong>Express</strong> – 1–2 business days
                     <br />
@@ -236,7 +270,11 @@ export default function Checkout() {
               </p>
               <div className="field">
                 <label htmlFor="nameOnCard">Name on card</label>
-                <input {...inputProps('payment', 'nameOnCard')} autoComplete="cc-name" onChange={(e) => setPayment({ ...payment, nameOnCard: e.target.value })} />
+                <input
+                  {...inputProps('payment', 'nameOnCard')}
+                  autoComplete="cc-name"
+                  onChange={(e) => setPayment({ ...payment, nameOnCard: e.target.value })}
+                />
                 <FieldError id="nameOnCard" error={errors.nameOnCard} />
               </div>
               <div className="field">
@@ -333,7 +371,8 @@ export default function Checkout() {
                 ))}
               </ul>
               <label className="checkbox">
-                <input type="checkbox" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />I have read and agree to the{' '}
+                <input type="checkbox" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} />I have read and agree to
+                the{' '}
                 <a href="/terms" target="_blank" rel="noopener">
                   Terms &amp; Conditions
                 </a>

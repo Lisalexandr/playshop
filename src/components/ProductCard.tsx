@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { money, type Product } from '../api';
-import { useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/useCart';
+import { useToast } from '../context/useToast';
 
 export function Rating({ value }: { value: number }) {
   const full = Math.round(value);
@@ -23,9 +23,7 @@ export function Price({ product }: { product: Product }) {
           <s className="muted" data-testid="original-price">
             {money(product.originalPrice)}
           </s>
-          <span className="sale-badge">
-            -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-          </span>
+          <span className="sale-badge">-{Math.round((1 - product.price / product.originalPrice) * 100)}%</span>
         </>
       )}
     </span>

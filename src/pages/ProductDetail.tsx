@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { api, ApiError, type Category, type Product } from '../api';
 import { Price, ProductImage, Rating } from '../components/ProductCard';
-import { MAX_QTY, useCart } from '../context/CartContext';
-import { useToast } from '../context/ToastContext';
+import { MAX_QTY, useCart } from '../context/useCart';
+import { useToast } from '../context/useToast';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -17,11 +17,16 @@ export default function ProductDetail() {
   const [optionError, setOptionError] = useState('');
   const [tab, setTab] = useState<'description' | 'reviews'>('description');
 
-  useEffect(() => {
+  const [prevId, setPrevId] = useState(id);
+  if (id !== prevId) {
+    setPrevId(id);
     setProduct(null);
     setNotFound(false);
     setQty(1);
     setOption('');
+  }
+
+  useEffect(() => {
     api<Product>(`/products/${id}`)
       .then(async (p) => {
         setProduct(p);
@@ -56,11 +61,7 @@ export default function ProductDetail() {
   const maxQty = Math.max(1, Math.min(MAX_QTY, product.stock));
   const outOfStock = product.stock === 0;
 
-  const stockLabel = outOfStock
-    ? 'Out of stock'
-    : product.stock <= 5
-      ? `Only ${product.stock} left in stock – order soon!`
-      : 'In stock';
+  const stockLabel = outOfStock ? 'Out of stock' : product.stock <= 5 ? `Only ${product.stock} left in stock – order soon!` : 'In stock';
 
   const onAdd = () => {
     if (product.options && !option) {
