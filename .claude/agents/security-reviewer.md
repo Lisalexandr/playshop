@@ -36,7 +36,9 @@ Report a finding only if you are at least 80% confident it is exploitable. If yo
 
 ## Output
 
-For each finding, write:
+When you are given a structured output schema (the pre-commit hook does this), return the verdict, a one-sentence summary of what you checked, and the findings through it. Set `verdict` to `FAIL` only when `findings` contains at least one HIGH or MEDIUM finding.
+
+Otherwise, for each finding, write:
 
 ```
 ### <SEVERITY: HIGH|MEDIUM> <category>: <file>:<line>
