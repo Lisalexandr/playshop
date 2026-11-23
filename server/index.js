@@ -111,7 +111,7 @@ function computeTotals(lines, shippingMethod = 'standard', promo = null) {
   if (method.freeOver && subtotal >= method.freeOver) shipping = 0;
   if (promo?.type === 'freeShipping') shipping = 0;
   if (lines.length === 0) shipping = 0;
-  const tax = round((subtotal - discount) * TAX_RATE);
+  const tax = round(subtotal * TAX_RATE);
   const total = round(subtotal - discount + shipping + tax);
   return { subtotal, discount, shipping, tax, total };
 }

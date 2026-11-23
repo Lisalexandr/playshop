@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import type { Product } from '../api';
 
 export const CART_KEY = 'playshop.cart';
-export const MAX_QTY = 10;
+export const MAX_QTY = 20;
 
 export interface CartItem {
   key: string; // productId + option

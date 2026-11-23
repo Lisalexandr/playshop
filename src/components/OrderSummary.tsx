@@ -35,7 +35,7 @@ export default function OrderSummary({
           </div>
           <div className="total">
             <dt>Total</dt>
-            <dd data-testid="summary-total">{money(totals.total)}</dd>
+            <dd data-testid="order-total">{money(totals.total)}</dd>
           </div>
         </>
       )}
