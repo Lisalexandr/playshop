@@ -1,76 +1,25 @@
-name: Manual tests
+name: Run E2E tests manually
 
-run-name: Tests on ${{ inputs.branch || github.ref_name }}
+run-name: E2E tests on ${{ github.ref_name }}
 
+# Pick the branch in "Use workflow from" (master by default). The branch must contain this workflow.
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: Branch, tag or commit SHA to test. Leave empty to test the branch selected in "Use workflow from".
-        required: false
-        type: string
 
 permissions:
   contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    outputs:
-      tests-ran: ${{ steps.tests.outcome == 'success' || steps.tests.outcome == 'failure' }}
-      sha: ${{ steps.checkout.outputs.commit }}
-    env:
-      # .env is git-ignored. These are the public seeded demo accounts documented in README.md.
-      BASE_URL: http://localhost:5173
-      TEST_USER_1: alice@example.com
-      TEST_PASSWORD_1: Password123!
-      TEST_USER_2: bob@example.com
-      TEST_PASSWORD_2: Password123!
-      TEST_USER_3: locked@example.com
-      TEST_PASSWORD_3: Password123!
-      TEST_USER_4: slow@example.com
-      TEST_PASSWORD_4: Password123!
-      TEST_USER_ADMIN: admin@example.com
-      TEST_PASSWORD_ADMIN: Admin123!
-    steps:
-      - uses: actions/checkout@v7
-        id: checkout
-        with:
-          ref: ${{ inputs.branch || github.ref }}
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Run Playwright tests
-        id: tests
-        run: npm test
-
-      - uses: actions/upload-artifact@v7
-        if: ${{ !cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 14
+  e2e:
+    uses: ./.github/workflows/e2e-tests.yml
 
   publish-report:
-    needs: test
+    needs: e2e
     # Publish whenever the tests ran, pass or fail.
-    if: ${{ !cancelled() && needs.test.outputs.tests-ran == 'true' }}
+    if: ${{ !cancelled() && needs.e2e.outputs.tests-ran == 'true' }}
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # push the report to the gh-pages branch
     uses: ./.github/workflows/publish-report.yml
     with:
-      result: ${{ needs.test.result }}
-      sha: ${{ needs.test.outputs.sha }}
+      result: ${{ needs.e2e.result }}
+      sha: ${{ needs.e2e.outputs.sha }}
