@@ -17,6 +17,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      tests-ran: ${{ steps.tests.outcome == 'success' || steps.tests.outcome == 'failure' }}
+      sha: ${{ steps.checkout.outputs.commit }}
     env:
       # .env is git-ignored. These are the public seeded demo accounts documented in README.md.
       BASE_URL: http://localhost:5173
@@ -32,6 +35,7 @@ jobs:
       TEST_PASSWORD_ADMIN: Admin123!
     steps:
       - uses: actions/checkout@v7
+        id: checkout
         with:
           ref: ${{ inputs.branch || github.ref }}
 
@@ -49,6 +53,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
+        id: tests
         run: npm test
 
       - uses: actions/upload-artifact@v7
@@ -57,3 +62,15 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+
+  publish-report:
+    needs: test
+    # Publish whenever the tests ran, pass or fail.
+    if: ${{ !cancelled() && needs.test.outputs.tests-ran == 'true' }}
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: ./.github/workflows/publish-report.yml
+    with:
+      result: ${{ needs.test.result }}
+      sha: ${{ needs.test.outputs.sha }}
